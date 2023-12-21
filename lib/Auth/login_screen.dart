@@ -13,7 +13,6 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
-    Size mq = MediaQuery.of(context).size;
 
     return Scaffold(
       appBar: AppBar(),
@@ -70,7 +69,7 @@ class _LoginScreenState extends State<LoginScreen> {
                onPressed: () {
                  Navigator.pushReplacement(
                    context,
-                   MaterialPageRoute(builder: (context) => const HomeScreen()),
+                   MaterialPageRoute(builder: (context) => HomeScreen()),
                  );
                },
                child: const Text(
@@ -97,7 +96,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     );
                   },
-                  child: Text("SignUp",style:TextStyle(fontSize: 18,color: Colors.blue,fontWeight: FontWeight.bold),),
+                  child: const Text("SignUp",style:TextStyle(fontSize: 18,color: Colors.blue,fontWeight: FontWeight.bold),),
                 )
               ],
             ),
