@@ -8,21 +8,7 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  final TextEditingController messController = TextEditingController();
-  bool isTextNotEmpty = false;
 
-
-  @override
-  void initState() {
-    super.initState();
-    messController.addListener(updateIsTextNotEmpty);
-  }
-
-  void updateIsTextNotEmpty(){
-    setState(() {
-      isTextNotEmpty = messController.text.isNotEmpty;
-    });
-  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,7 +40,7 @@ class _ChatScreenState extends State<ChatScreen> {
         ],
       ),
     );
-    ;
+
   }
 }
 
@@ -88,17 +74,38 @@ class MessageWidget extends StatelessWidget {
   }
 }
 
-class InputField extends StatelessWidget {
+class InputField extends StatefulWidget {
   const InputField({super.key});
 
   @override
+  State<InputField> createState() => _InputFieldState();
+}
+
+class _InputFieldState extends State<InputField> {
+  final TextEditingController messController = TextEditingController();
+  bool isTextNotEmpty = false;
+
+
+  @override
+  void initState() {
+    super.initState();
+    messController.addListener(updateIsTextNotEmpty);
+  }
+
+  void updateIsTextNotEmpty(){
+    setState(() {
+      isTextNotEmpty = messController.text.isNotEmpty;
+    });
+  }
+  @override
   Widget build(BuildContext context) {
-    return  Padding(
+    return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(
         children: [
           Expanded(
             child: TextField(
+              controller: messController,
               decoration: InputDecoration(
                   hintText: "Type a message...",
                   border: OutlineInputBorder(
@@ -112,8 +119,12 @@ class InputField extends StatelessWidget {
             ),
           ),
           IconButton(
-            onPressed: (){},
+            onPressed:isTextNotEmpty ? (){
+              // print('Message sent ${messController.text}');
+              messController.clear();
+            } : null,
             icon: const Icon(Icons.send),
+            color: isTextNotEmpty? Colors.blue : Colors.grey,
           )
         ],
       ),

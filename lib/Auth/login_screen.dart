@@ -13,6 +13,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
+    Size mq = MediaQuery.of(context).size;
 
     return Scaffold(
       appBar: AppBar(),
