@@ -1,23 +1,49 @@
 import 'package:chatapp_firebase/Auth/register_screen.dart';
+import 'package:chatapp_firebase/blocs/auth_cubit.dart';
 import 'package:chatapp_firebase/screen/home_screen.dart';
 import 'package:flutter/material.dart';
-import '../../main.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class LoginScreen extends StatelessWidget {
+  const LoginScreen({super.key});
 
-  @override
-  State<LoginScreen> createState() => _LoginScreenState();
-}
-
-class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
-    Size mq = MediaQuery.of(context).size;
-
     return Scaffold(
-      appBar: AppBar(),
-      body: Column(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+      ),
+      body: BlocProvider(
+        create: (context) => AuthCubit(),
+        child: const LoginFrom(),
+      ),
+    );
+  }
+}
+
+class LoginFrom extends StatefulWidget {
+  const LoginFrom({super.key});
+
+  @override
+  State<LoginFrom> createState() => _LoginFromState();
+}
+
+class _LoginFromState extends State<LoginFrom> {
+  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  bool showError = false;
+  late AuthCubit authCubit;
+
+  @override
+  void initState() {
+    authCubit = context.read<AuthCubit>();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<AuthCubit, AuthState>(builder: (context, state) {
+      return Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Image.asset(
@@ -33,6 +59,7 @@ class _LoginScreenState extends State<LoginScreen> {
             child: SizedBox(
               width: 400,
               child: TextField(
+                controller: usernameController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30.0),
@@ -47,6 +74,7 @@ class _LoginScreenState extends State<LoginScreen> {
             child: SizedBox(
               width: 400,
               child: TextField(
+                controller: passwordController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30.0),
@@ -56,40 +84,64 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
           ),
+          Visibility(
+            visible: showError &&
+                (usernameController.text.isEmpty ||
+                    passwordController.text.isEmpty),
+            child: Text(
+              (authCubit.state is AuthField)
+                  ? (authCubit.state as AuthField).error
+                  : "",
+              style: const TextStyle(color: Colors.red),
+            ),
+          ),
           const SizedBox(
             height: 10,
           ),
           Padding(
-           padding: const EdgeInsets.only(left: 30,right: 30),
-           child:  SizedBox(
-             width: 400,
-             child: TextButton(
-               style: ButtonStyle(
-                 backgroundColor: MaterialStateProperty.all(Colors.black),
-               ),
-               onPressed: () {
-                 Navigator.pushReplacement(
-                   context,
-                   MaterialPageRoute(builder: (context) => HomeScreen()),
-                 );
-               },
-               child: const Text(
-                 "Login",
-                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
-               ),
-             ),
-           ),
-         ),
+            padding: const EdgeInsets.only(left: 30, right: 30),
+            child: SizedBox(
+              width: 400,
+              child: TextButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(Colors.black),
+                ),
+                onPressed: () {
+                  setState(() {
+                    showError = true;
+                  });
+                  authCubit
+                      .login(usernameController.text, passwordController.text,
+                          (username) async {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>  HomeScreen(username:username)));
+                  });
+                },
+                child: const Text(
+                  "Login",
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
+                ),
+              ),
+            ),
+          ),
           const SizedBox(
             height: 10,
           ),
-           Padding(
-            padding: const EdgeInsets.only(left: 30,right: 30),
+          Padding(
+            padding: const EdgeInsets.only(left: 30, right: 30),
             child: Row(
               children: [
-                const Text("Do you haven't account?",style:TextStyle(fontSize: 16),),
+                const Text(
+                  "Do you haven't account?",
+                  style: TextStyle(fontSize: 16),
+                ),
                 GestureDetector(
-                  onTap: (){
+                  onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -97,12 +149,17 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     );
                   },
-                  child: const Text("SignUp",style:TextStyle(fontSize: 18,color: Colors.blue,fontWeight: FontWeight.bold),),
+                  child: const Text(
+                    "SignUp",
+                    style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.blue,
+                        fontWeight: FontWeight.bold),
+                  ),
                 )
               ],
             ),
           ),
-
           Expanded(
             // Sử dụng Expanded để đảm bảo container chiếm phần còn lại của màn hình
             child: Column(
@@ -139,9 +196,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       const Text(
                         "Login with facebook",
-                        style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.white),
+                        style: TextStyle(fontSize: 20, color: Colors.white),
                       )
                     ],
                   ),
@@ -180,7 +235,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       const Text(
                         "Login with google",
                         style: TextStyle(
-                            fontSize: 20,),
+                          fontSize: 20,
+                        ),
                       )
                     ],
                   ),
@@ -192,7 +248,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
         ],
-      ),
-    );
+      );
+    });
   }
 }

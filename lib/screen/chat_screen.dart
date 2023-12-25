@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:chatapp_firebase/blocs/user_cubit.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});

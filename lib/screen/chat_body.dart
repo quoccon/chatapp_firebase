@@ -1,4 +1,4 @@
-import 'package:chatapp_firebase/blocs/chat_cubit.dart';
+import 'package:chatapp_firebase/blocs/user_cubit.dart';
 import 'package:chatapp_firebase/screen/chat_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

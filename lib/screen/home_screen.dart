@@ -1,8 +1,9 @@
+import 'package:chatapp_firebase/screen/information_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:chatapp_firebase/screen/chat_body.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({Key? key, required String username}) : super(key: key);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -75,9 +76,15 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             ListTile(
-              leading: const Icon(Icons.home),
-              title: const Text("Home"),
-              onTap: () {},
+              leading: const Icon(Icons.person),
+              title: const Text("Information"),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const InformationScreen())
+                );
+              },
             ),
             const Padding(
               padding: EdgeInsets.only(right: 20, left: 20),
@@ -85,7 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             ListTile(
               leading: const Icon(Icons.shield_moon),
-              title: const Text("Light/Dark mode"),
+              title: const Text("Dark mode"),
               trailing: Switch(
                 value: _isDarkModeEnabled,
                 onChanged: (value) {
