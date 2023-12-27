@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:chatapp_firebase/blocs/user_cubit.dart';
 
 class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key});
+  final User user;
+  const ChatScreen({Key? key, required this.user}) : super(key: key);
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -14,7 +15,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("jbdfkabjdkb"),
+        title: Text(widget.user.username),
         actions: [
           IconButton(
             onPressed: (){},

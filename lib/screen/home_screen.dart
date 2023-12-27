@@ -1,9 +1,12 @@
 import 'package:chatapp_firebase/screen/information_screen.dart';
+import 'package:chatapp_firebase/screen/users_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:chatapp_firebase/screen/chat_body.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key, required String username}) : super(key: key);
+
+  get username => null;
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -12,6 +15,14 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   bool _isDarkModeEnabled = false;
   String _selectedLanguage = "English"; // Default language
+  String username = "";
+
+  @override
+  void initState() {
+    print('Username: ${widget.username}');
+    super.initState();
+
+  }
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -140,7 +151,12 @@ class _HomeScreenState extends State<HomeScreen> {
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 10),
         child: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const UserScreen())
+              );
+          },
           child: const Icon(Icons.add_comment_rounded),
         ),
       ),

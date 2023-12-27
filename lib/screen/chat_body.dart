@@ -29,7 +29,7 @@ class ChatBody extends StatelessWidget {
                   onTap: (){
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const ChatScreen()),
+                      MaterialPageRoute(builder: (context) =>  ChatScreen(user: user,)),
                     );
                   },
 
