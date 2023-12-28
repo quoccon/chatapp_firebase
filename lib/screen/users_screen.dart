@@ -12,6 +12,9 @@ class UserScreen extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         title: const Text("Danh sách người dùng"),
+        actions: [
+          IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
+        ],
       ),
       body: BlocProvider(
         create: (context) => UserCubit(),
@@ -44,14 +47,15 @@ class UserBody extends StatelessWidget {
                           backgroundImage: NetworkImage(user.image),
                         ),
                         title: Text(user.username),
-                        onTap: (){
+                        onTap: () {
                           Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => ChatScreen(user: user,))
-                          );
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ChatScreen(
+                                        user: user,
+                                      )));
                         },
                       ),
-
                     ],
                   );
                 },

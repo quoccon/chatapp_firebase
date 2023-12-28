@@ -34,7 +34,17 @@ class _ChatScreenState extends State<ChatScreen> {
               padding: const EdgeInsets.all(8.0),
               children: const [
                 MessageWidget(isMe: true,message: "Hello!",),
-                MessageWidget(isMe: false,message: "Oke đmm!",)
+                MessageWidget(isMe: false,message: "Oke đmm!",),
+                MessageWidget(isMe: true,message: "Hello!",),
+                MessageWidget(isMe: false,message: "Oke !",),
+                MessageWidget(isMe: true,message: "Hello!",),
+                MessageWidget(isMe: false,message: "Oke đmm!",),
+                MessageWidget(isMe: true,message: "Hello!",),
+                MessageWidget(isMe: false,message: "Oke đmm!",),
+                MessageWidget(isMe: true,message: "Hello!",),
+                MessageWidget(isMe: false,message: "Oke đmm!",),
+                MessageWidget(isMe: true,message: "Hello!",),
+                MessageWidget(isMe: false,message: "Oke đmm!",),
               ],
             ),
           ),
@@ -68,11 +78,16 @@ class MessageWidget extends StatelessWidget {
           color: isMe ? Colors.blue : Colors.grey,
           borderRadius: BorderRadius.circular(8.0),
         ),
-        child: Text(
-          message,style: TextStyle(color: isMe ? Colors.white : Colors.black),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: MediaQuery.of(context).size.width * 0.6,
+          ),
+          child: Text(
+            message,style: TextStyle(color: isMe ? Colors.white : Colors.black),
+          ),
         ),
-      ),
-    );
+        ),
+      );
   }
 }
 
@@ -107,6 +122,8 @@ class _InputFieldState extends State<InputField> {
         children: [
           Expanded(
             child: TextField(
+              maxLines: null,
+              minLines: 1,
               controller: messController,
               decoration: InputDecoration(
                   hintText: "Type a message...",
