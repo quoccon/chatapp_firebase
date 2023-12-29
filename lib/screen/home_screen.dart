@@ -19,7 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    print('Username: ${widget.username}');
+
     super.initState();
 
   }

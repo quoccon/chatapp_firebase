@@ -3,9 +3,11 @@ import 'dart:convert';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:dio/dio.dart';
-import '../blocs/chat_cubit.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:convert';
+
+import '../model/userAuth.dart';
 
 
 abstract class AuthState extends Equatable {
@@ -16,8 +18,8 @@ abstract class AuthState extends Equatable {
 class AuthInitIal extends AuthState {}
 
 class AuthSuccess extends AuthState {
-  final String userId;
-  AuthSuccess({required this.userId});
+  final UserAuth user;
+  AuthSuccess({required this.user});
 
   @override
   List<Object?> get props => [];
@@ -66,7 +68,8 @@ class AuthCubit extends Cubit<AuthState> {
 
       if (response.statusCode == 200) {
         final userId = response.data['infoU']['_id'];
-        emit(AuthSuccess(userId: userId));
+        UserAuth auth = UserAuth.fromJson(response.data);
+        emit(AuthSuccess(user: auth));
         print('user == ${username.isEmpty}');
         print('pass == ${pass.isEmpty}');
         callback.call();
@@ -97,10 +100,11 @@ class AuthCubit extends Cubit<AuthState> {
       print(response);
 
       if (response.statusCode == 200) {
-        final userId = response.data['infoU']['_id'];
-        emit(AuthSuccess(userId:userId));
-        connectToSocket(userId);
-        callback.call(username);
+        // final userId = response.data['infoU']['_id'];
+        UserAuth userAuth = UserAuth.fromJson(response.data);
+        emit(AuthSuccess(user: userAuth));
+        // connectToSocket(userId);
+        callback.call(userAuth as String);
       }
     } catch (e) {
       print('Lỗi đăng nhập $e');
