@@ -1,6 +1,4 @@
 import 'package:bloc/bloc.dart';
-
-import 'package:meta/meta.dart';
 import 'package:dio/dio.dart';
 import '../blocs/chat__state.dart';
 
@@ -8,9 +6,9 @@ class ChatCubit extends Cubit<ChatState> {
   ChatCubit() : super(ChatInitial());
   final Dio dio = Dio();
 
-  Future<void> sendMessage(String message) async {
+  Future<void> sendMessage(String message,String senderId, String receiverId) async {
     try {
-      final response = await dio.post('http://10.0.2.2:8000/api-postmessage',data: {'message': message});
+      final response = await dio.post('http://10.0.2.2:8000/api-postmessage',data: {'message': message,'senderId':senderId,'receiverId':receiverId});
       print(response.data);
 
       if(response.statusCode == 200){

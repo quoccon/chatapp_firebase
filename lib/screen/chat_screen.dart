@@ -1,3 +1,4 @@
+import 'package:chatapp_firebase/blocs/chat__cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:chatapp_firebase/blocs/user_cubit.dart';
 
@@ -10,6 +11,9 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  late ChatCubit chatCubit;
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -48,12 +52,13 @@ class _ChatScreenState extends State<ChatScreen> {
               ],
             ),
           ),
-          const InputField()
+           InputField(user: widget.user),
         ],
       ),
     );
 
   }
+
 }
 
 class MessageWidget extends StatelessWidget {
@@ -92,7 +97,8 @@ class MessageWidget extends StatelessWidget {
 }
 
 class InputField extends StatefulWidget {
-  const InputField({super.key});
+  final User user;
+  const InputField({super.key, required this.user});
 
   @override
   State<InputField> createState() => _InputFieldState();
@@ -101,6 +107,7 @@ class InputField extends StatefulWidget {
 class _InputFieldState extends State<InputField> {
   final TextEditingController messController = TextEditingController();
   bool isTextNotEmpty = false;
+  // final String senderId = widget.user.id;
 
 
   @override
@@ -139,8 +146,9 @@ class _InputFieldState extends State<InputField> {
           ),
           IconButton(
             onPressed:isTextNotEmpty ? (){
-              // print('Message sent ${messController.text}');
-              messController.clear();
+              print('User : ${widget.user.id}');
+
+                    messController.clear();
             } : null,
             icon: const Icon(Icons.send),
             color: isTextNotEmpty? Colors.blue : Colors.grey,

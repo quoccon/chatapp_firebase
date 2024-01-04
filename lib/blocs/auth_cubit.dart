@@ -83,7 +83,7 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   Future<void> login(String usernameController, String passwordController,
-      Function(String) callback) async {
+      Function(UserAuth) callback) async {
     final username = usernameController;
     final password = passwordController;
 
@@ -104,7 +104,10 @@ class AuthCubit extends Cubit<AuthState> {
         UserAuth userAuth = UserAuth.fromJson(response.data);
         emit(AuthSuccess(user: userAuth));
         // connectToSocket(userId);
-        callback.call(userAuth as String);
+        callback.call(userAuth);
+      }else{
+        emit(AuthField(error: "Mật khẩu không đúng"));
+        return;
       }
     } catch (e) {
       print('Lỗi đăng nhập $e');

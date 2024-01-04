@@ -1,12 +1,12 @@
+import 'package:chatapp_firebase/model/userAuth.dart';
 import 'package:chatapp_firebase/screen/information_screen.dart';
 import 'package:chatapp_firebase/screen/users_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:chatapp_firebase/screen/chat_body.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key, required String username}) : super(key: key);
-
-  get username => null;
+  const HomeScreen({Key? key,required this.userAuth}) : super(key: key);
+  final UserAuth userAuth;
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -15,14 +15,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   bool _isDarkModeEnabled = false;
   String _selectedLanguage = "English"; // Default language
-  String username = "";
-
-  @override
-  void initState() {
-
-    super.initState();
-
-  }
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -75,12 +67,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     width: 100,
                     height: 100,
                   ),
-                  const Column(
+                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text("Username"),
-                      Text("username@gmail.com"),
+                      Text(widget.userAuth.infoU?.username ?? ""),
+                      const Text("username@gmail.com"),
                     ],
                   )
                 ],

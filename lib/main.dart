@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
           create: (BuildContext context) => AuthCubit(),
         ),
       ],
-      child:  LoginScreen()),
+      child:  const LoginScreen()),
     );
   }
 }

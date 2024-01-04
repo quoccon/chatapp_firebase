@@ -1,12 +1,13 @@
 import 'package:chatapp_firebase/Auth/register_screen.dart';
 import 'package:chatapp_firebase/blocs/auth_cubit.dart';
+import 'package:chatapp_firebase/model/userAuth.dart';
 import 'package:chatapp_firebase/screen/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+  const LoginScreen({Key? key}) : super(key: key);
 
 
   @override
@@ -32,6 +33,7 @@ class _LoginFromState extends State<LoginFrom> {
   final TextEditingController passwordController = TextEditingController();
   bool showError = false;
   late AuthCubit authCubit;
+  late UserAuth userAuth;
 
   @override
   void initState() {
@@ -111,11 +113,13 @@ class _LoginFromState extends State<LoginFrom> {
                   });
                   authCubit
                       .login(usernameController.text, passwordController.text,
-                          (username) async {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>  HomeScreen(username:username)));
+                          (userAuth) async {
+                    if(!(authCubit.state is AuthField)){
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>  HomeScreen(userAuth: userAuth,)));
+                    }
                   });
                 },
                 child: const Text(
