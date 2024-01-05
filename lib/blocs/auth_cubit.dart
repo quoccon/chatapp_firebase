@@ -41,8 +41,12 @@ class AuthCubit extends Cubit<AuthState> {
 
   AuthCubit() : super(AuthInitIal());
 
-  Future<void> register(String usernameController, String passwordController,
-      String confirmPassword, Function() callback) async {
+  Future<void> register(
+      String usernameController,
+      String passwordController,
+      String confirmPassword,
+      Function() callback,
+      ) async {
     final username = usernameController;
     final pass = passwordController;
 
@@ -54,20 +58,19 @@ class AuthCubit extends Cubit<AuthState> {
       emit(AuthField(error: "Mật khẩu nhập không trùng khớp"));
       return;
     }
+
     try {
       final response = await dio.post(
         'http://10.0.2.2:8000/reg-api',
         data: {
           'username': username,
           'password': pass,
-          'confirmpassword': confirmPassword
+          'confirmpassword': confirmPassword,
         },
       );
-      // jsonEncode(response);
       print(response);
 
       if (response.statusCode == 200) {
-        final userId = response.data['infoU']['_id'];
         UserAuth auth = UserAuth.fromJson(response.data);
         emit(AuthSuccess(user: auth));
         print('user == ${username.isEmpty}');
@@ -81,6 +84,8 @@ class AuthCubit extends Cubit<AuthState> {
       emit(AuthField(error: "Đã có lỗi khi xử lí yêu cầu của bạn $e"));
     }
   }
+
+
 
   Future<void> login(String usernameController, String passwordController,
       Function(UserAuth) callback) async {
@@ -105,9 +110,11 @@ class AuthCubit extends Cubit<AuthState> {
         emit(AuthSuccess(user: userAuth));
         // connectToSocket(userId);
         callback.call(userAuth);
-      }else{
-        emit(AuthField(error: "Mật khẩu không đúng"));
+      }else if(response.statusCode == 401){
+        emit(AuthField(error: "Tên đăng nhập hoặc mật khẩu không đúng"));
         return;
+      }else{
+        emit(AuthField(error: "Đã có lỗi xảy ra, vui lòng thử lại sau"));
       }
     } catch (e) {
       print('Lỗi đăng nhập $e');
@@ -116,18 +123,18 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
 
-  Future<void> getUbyId(String currentUId) async{
-    try{
-      final response = await dio.get('http://10.0.2.2:8000/getUbyId/$currentUId');
-      if(response.statusCode == 200) {
-        final userData = response.data;
-        print('UserData : $userData');
-      }else{
-        emit(AuthField(error: "Không thể lấy thông tin người dùng"));
-      }
-    }catch(e){
-      print('Lỗi lấy thông tin $e');
-      emit(AuthField(error: "Có lỗi khi xử lí yêu cầu của bạn"));
-    }
-  }
+  // Future<void> getUbyId(String currentUId) async{
+  //   try{
+  //     final response = await dio.get('http://10.0.2.2:8000/g etUbyId/$currentUId');
+  //     if(response.statusCode == 200) {
+  //       final userData = response.data;
+  //       print('UserData : $userData');
+  //     }else{
+  //       emit(AuthField(error: "Không thể lấy thông tin người dùng"));
+  //     }
+  //   }catch(e){
+  //     print('Lỗi lấy thông tin $e');
+  //     emit(AuthField(error: "Có lỗi khi xử lí yêu cầu của bạn"));
+  //   }
+  // }
 }

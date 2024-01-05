@@ -1,6 +1,8 @@
+import 'package:chatapp_firebase/blocs/auth_cubit.dart';
 import 'package:chatapp_firebase/blocs/chat__cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:chatapp_firebase/blocs/user_cubit.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ChatScreen extends StatefulWidget {
   final User user;
@@ -12,7 +14,15 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   late ChatCubit chatCubit;
+  late AuthCubit authCubit;
 
+  @override
+  void initState() {
+    
+    // TODO: implement initState
+    super.initState();
+
+  }
 
 
   @override
@@ -97,6 +107,7 @@ class MessageWidget extends StatelessWidget {
 }
 
 class InputField extends StatefulWidget {
+
   final User user;
   const InputField({super.key, required this.user});
 

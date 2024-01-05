@@ -114,7 +114,7 @@ class _LoginFromState extends State<LoginFrom> {
                   authCubit
                       .login(usernameController.text, passwordController.text,
                           (userAuth) async {
-                    if(!(authCubit.state is AuthField)){
+                    if(authCubit.state is AuthSuccess){
                       Navigator.push(
                           context,
                           MaterialPageRoute(

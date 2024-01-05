@@ -1,11 +1,13 @@
+import 'package:chatapp_firebase/Auth/login_screen.dart';
 import 'package:chatapp_firebase/model/userAuth.dart';
 import 'package:chatapp_firebase/screen/information_screen.dart';
 import 'package:chatapp_firebase/screen/users_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:chatapp_firebase/screen/chat_body.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key,required this.userAuth}) : super(key: key);
+  const HomeScreen({Key? key, required this.userAuth}) : super(key: key);
   final UserAuth userAuth;
 
   @override
@@ -34,6 +36,58 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  void _openQrCode() {
+    // String userId = widget.userAuth.infoU?.id ?? "";
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => QrCodeScreen(userAuth: widget.userAuth)
+        )
+    );
+  }
+
+  void _showLogout(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return  AlertDialog(
+            title: const Text("Logout"),
+            content: const Text("Are you sure you want to logout?"),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text("Cancel"),
+              ),
+              TextButton(
+                onPressed: (){
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (BuildContext context){
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                  );
+
+                  Future.delayed(const Duration(seconds: 2),(){
+                    Navigator.of(context).pop();
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => const LoginScreen())
+                    );
+                  });
+                },
+                child: const Text("Logout"),
+              )
+            ],
+          );
+        }
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,7 +103,9 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         actions: [
 
-          IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert))
+          IconButton(onPressed: () {
+            _openQrCode();
+          }, icon: const Icon(Icons.qr_code))
         ],
       ),
       drawer: Drawer(
@@ -67,7 +123,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     width: 100,
                     height: 100,
                   ),
-                   Column(
+                  Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -84,8 +140,9 @@ class _HomeScreenState extends State<HomeScreen> {
               onTap: () {
                 Navigator.pop(context);
                 Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const InformationScreen())
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const InformationScreen())
                 );
               },
             ),
@@ -115,7 +172,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 onSelected: (value) {
                   _selectLanguage(value);
                 },
-                itemBuilder: (context) => [
+                itemBuilder: (context) =>
+                [
                   const PopupMenuItem(
                     value: "Vietnamese",
                     child: Text("Vietnamese"),
@@ -132,9 +190,22 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Divider(height: 1, color: Colors.black),
             ),
             ListTile(
+              leading: const Icon(Icons.lock),
+              title: const Text("Change password"),
+              onTap: () {
+                _showLogout(context);
+              },
+            ),
+            const Padding(
+              padding: EdgeInsets.only(right: 20, left: 20),
+              child: Divider(height: 1, color: Colors.black),
+            ),
+            ListTile(
               leading: const Icon(Icons.logout),
               title: const Text("Logout"),
-              onTap: () {},
+              onTap: () {
+                _showLogout(context);
+              },
             ),
           ],
         ),
@@ -144,10 +215,10 @@ class _HomeScreenState extends State<HomeScreen> {
         padding: const EdgeInsets.only(bottom: 10),
         child: FloatingActionButton(
           onPressed: () {
-              Navigator.push(
+            Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const UserScreen())
-              );
+            );
           },
           child: const Icon(Icons.add_comment_rounded),
         ),
@@ -155,3 +226,34 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
+
+class QrCodeScreen extends StatelessWidget {
+  final UserAuth userAuth;
+
+  const QrCodeScreen({Key?key, required this.userAuth}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final qrCode = QrImageView(
+      data: userAuth.infoU?.id ?? "",
+      version: QrVersions.auto,
+      size: 200.0,
+    );
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("My QrCode"),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            qrCode,
+            const SizedBox(height: 20.0,),
+            Text(userAuth.infoU?.username ?? ""),
+          ],
+        ),
+      ),
+    );
+  }
+}
+

@@ -44,7 +44,7 @@ class UserCubit extends Cubit<UserState> {
     List<User> users = [
       User("1","Nguyễn Văn Quốc",
           'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXaova-4IVX3jj2DvzkGfkSzhrWWMyzxDwxw&usqp=CAU'),
-      User("2","Dương Thị Huyền Trang",
+      User("2","Nguyễn Văn B",
           'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXaova-4IVX3jj2DvzkGfkSzhrWWMyzxDwxw&usqp=CAU')
     ];
     emit(UserState(users));
